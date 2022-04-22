@@ -13,9 +13,9 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.mapview.MapView
-import ru.marslab.simplemap.BuildConfig
 import ru.marslab.simplemap.R
 
 @Composable
@@ -24,12 +24,11 @@ fun YandexMapWidget(
     modifier: Modifier = Modifier
 ) {
     val state = widgetModel.state.collectAsState()
-    MapKitFactory.setApiKey(BuildConfig.yandex_map_api_key)
-    MapKitFactory.initialize(LocalContext.current)
     val mapView = rememberMapViewWithLifecycle(mapId = R.layout.yandex_map)
     LaunchedEffect(key1 = mapView) {
-        widgetModel.setMap(mapView.map.apply { move(state.value.position) })
+        widgetModel.setMap(mapView.map)
     }
+    mapView.map.move(state.value.position, Animation(Animation.Type.SMOOTH, 0.5f), null)
     Box(modifier = modifier.fillMaxSize()) {
         AndroidView(factory = { mapView })
     }

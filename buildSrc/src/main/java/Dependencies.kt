@@ -154,7 +154,7 @@ object Dependencies {
     }
 
     object DataStore {
-        const val core = "androidx.datastore:datastore:${Versions.dataStore}"
+        const val proto = "androidx.datastore:datastore:${Versions.dataStore}"
         const val preferences = "androidx.datastore:datastore-preferences:${Versions.dataStore}"
     }
 

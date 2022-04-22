@@ -1,5 +1,6 @@
 package ru.marslab.simplemap.core
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +21,8 @@ import kotlinx.coroutines.launch
 interface Event
 
 interface Action
+
+private const val ERROR_LOG_TAG = "ViewModel Error"
 
 @OptIn(ExperimentalCoroutinesApi::class)
 abstract class BaseViewModel<ST, AC : Action, EV : Event>(initState: ST) : ViewModel() {
@@ -44,6 +47,10 @@ abstract class BaseViewModel<ST, AC : Action, EV : Event>(initState: ST) : ViewM
         viewModelScope.launch {
             block.invoke(this)
         }
+    }
+
+    open fun handleError(error: Throwable, message: String? = null) {
+        Log.d(ERROR_LOG_TAG, message ?: error.message.orEmpty(), error)
     }
 
     fun sendAction(action: AC) {

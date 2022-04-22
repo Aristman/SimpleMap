@@ -59,11 +59,14 @@ dependencies {
     implementation(Dependencies.JetpackCompose.uiTooling)
     implementation(Dependencies.JetpackCompose.activity)
     implementation(Dependencies.JetpackCompose.lifecycleViewModel)
+    implementation(Dependencies.DataStore.preferences)
 
     implementation(Dependencies.Yandex.lite)
 
     implementation(Dependencies.Dagger.hilt)
     kapt(Dependencies.Dagger.hiltCompiler)
+
+    implementation(Dependencies.JetpackCompose.Accompanist.permissions)
 
     testImplementation(Dependencies.Test.junit)
     androidTestImplementation(Dependencies.Test.junitExt)

@@ -15,4 +15,27 @@ class YandexMapWidgetModel : BaseWidgetModel<YandexMapState>(YandexMapState()) {
     internal fun setMap(map: Map) {
         setState { state.value.copy(map = map) }
     }
+
+    internal fun setCameraPosition(cameraPosition: CameraPosition) {
+        setState { state.value.copy(position = cameraPosition) }
+    }
+
+    internal fun setLocation(
+        location: Point? = null,
+        zoom: Float? = null,
+        azimuth: Float? = null,
+        tilt: Float? = null
+    ) {
+        val oldPosition = state.value.position
+        setState {
+            state.value.copy(
+                position = CameraPosition(
+                    location ?: oldPosition.target,
+                    zoom ?: oldPosition.zoom,
+                    azimuth ?: oldPosition.azimuth,
+                    tilt ?: oldPosition.tilt
+                )
+            )
+        }
+    }
 }
