@@ -29,7 +29,10 @@ object Versions {
         const val analytics = "20.1.2"
     }
 
-    object Yandex
+    object Yandex {
+        const val lite = "4.0.0-lite"
+        const val full = "4.0.0-full"
+    }
 
     const val gradle = "7.1.3"
     const val kotlin = "1.6.10"

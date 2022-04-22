@@ -54,6 +54,8 @@ dependencies {
     implementation(Dependencies.JetpackCompose.activity)
     implementation(Dependencies.Jetpack.lifeCycle)
 
+    implementation(Dependencies.Yandex.lite)
+
     testImplementation(Dependencies.Test.junit)
     androidTestImplementation(Dependencies.Test.junitExt)
     androidTestImplementation(Dependencies.Test.espresso)

@@ -105,6 +105,11 @@ object Dependencies {
         const val espresso = "androidx.test.espresso:espresso-core:${Versions.espresso}"
     }
 
+    object Yandex {
+        const val lite = "com.yandex.android:maps.mobile:${Versions.Yandex.lite}"
+        const val full = "com.yandex.android:maps.mobile:${Versions.Yandex.full}"
+    }
+
     object Google {
         object FireBase {
             const val core = "com.google.firebase:firebase-bom:${Versions.FireBase.core}"
