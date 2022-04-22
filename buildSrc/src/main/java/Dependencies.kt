@@ -4,7 +4,7 @@ object Dependencies {
         const val fragment = "androidx.fragment:fragment-ktx:${Versions.fragmentKtx}"
         const val lifeCycle =
             "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifeCycle}"
-        const val lifeCycleVieModel =
+        const val lifeCycleViewModel =
             "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifeCycle}"
 
         object Paging {
@@ -27,7 +27,7 @@ object Dependencies {
         const val material = "androidx.compose.material:material:${Versions.Compose.core}"
         const val animation = "androidx.compose.animation:animation:${Versions.Compose.core}"
         const val uiTooling = "androidx.compose.ui:ui-tooling:${Versions.Compose.core}"
-        const val lifecycle =
+        const val lifecycleViewModel =
             "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.Compose.lifecycle}"
         const val junit = "androidx.compose.ui:ui-test-junit4:${Versions.Compose.core}"
         const val MaterialThemeAdapter =
