@@ -13,22 +13,39 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
+import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.map.InputListener
+import com.yandex.mapkit.map.Map
 import com.yandex.mapkit.mapview.MapView
 import ru.marslab.simplemap.R
 
 @Composable
 fun YandexMapWidget(
     widgetModel: YandexMapWidgetModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: (point: Point) -> Unit = {},
+    onLongClick: (point: Point) -> Unit = {}
 ) {
     val state = widgetModel.state.collectAsState()
     val mapView = rememberMapViewWithLifecycle(mapId = R.layout.yandex_map)
-    LaunchedEffect(key1 = mapView) {
-        widgetModel.setMap(mapView.map)
+    val mapClickListener = object : InputListener {
+        override fun onMapTap(p0: Map, p1: Point) {
+            onClick.invoke(p1)
+        }
+
+        override fun onMapLongTap(p0: Map, p1: Point) {
+            onLongClick.invoke(p1)
+        }
     }
-    mapView.map.move(state.value.position, Animation(Animation.Type.SMOOTH, 0.5f), null)
+    LaunchedEffect(key1 = mapView) {
+        widgetModel.setMap(
+            mapView.map.apply {
+                addInputListener(mapClickListener)
+            }
+        )
+    }
+
     Box(modifier = modifier.fillMaxSize()) {
         AndroidView(factory = { mapView })
     }

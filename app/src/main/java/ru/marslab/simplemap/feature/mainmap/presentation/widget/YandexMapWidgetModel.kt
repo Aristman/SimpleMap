@@ -1,5 +1,6 @@
 package ru.marslab.simplemap.feature.mainmap.presentation.widget
 
+import com.yandex.mapkit.Animation
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.Map
@@ -37,5 +38,6 @@ class YandexMapWidgetModel : BaseWidgetModel<YandexMapState>(YandexMapState()) {
                 )
             )
         }
+        state.value.map?.move(state.value.position, Animation(Animation.Type.SMOOTH, 0.5f), null)
     }
 }
