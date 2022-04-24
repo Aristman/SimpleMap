@@ -3,6 +3,7 @@ package ru.marslab.simplemap.core
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cafe.adriel.voyager.navigator.Navigator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -36,11 +37,19 @@ abstract class BaseViewModel<ST, AC : Action, EV : Event>(initState: ST) : ViewM
     val event: Flow<EV?>
         get() = _event.receiveAsFlow()
 
+    private var _navigator: Navigator? = null
+    val navigator: Navigator
+        get() = checkNotNull(_navigator)
+
     init {
         this.action
             .scan(initState, ::reduceState)
             .onEach { _state.emit(it) }
             .stateIn(viewModelScope, SharingStarted.Eagerly, initState)
+    }
+
+    fun setNavigator(navigator: Navigator) {
+        this._navigator = navigator
     }
 
     fun launch(block: suspend CoroutineScope.() -> Unit) {

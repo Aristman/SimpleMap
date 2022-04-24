@@ -36,6 +36,7 @@ dependencies {
 
     implementation(Dependencies.Kotlin.coroutines)
     implementation(Dependencies.Jetpack.lifeCycleViewModel)
+    implementation(Dependencies.JetpackCompose.Voyager.core)
 
     testImplementation(Dependencies.Test.junit)
     androidTestImplementation(Dependencies.Test.junitExt)

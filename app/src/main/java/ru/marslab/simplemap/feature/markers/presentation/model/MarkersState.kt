@@ -1,7 +1,7 @@
 package ru.marslab.simplemap.feature.markers.presentation.model
 
-import com.yandex.mapkit.map.PlacemarkMapObject
+import ru.marslab.simplemap.common.model.MapMarker
 
 data class MarkersState(
-    val markers: List<PlacemarkMapObject> = emptyList()
+    val markers: List<MapMarker> = emptyList()
 )

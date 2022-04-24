@@ -1,4 +1,4 @@
-package ru.marslab.simplemap.feature.mainmap.domain.model
+package ru.marslab.simplemap.common.model
 
 import com.yandex.mapkit.geometry.Point
 
