@@ -9,6 +9,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
+import cafe.adriel.voyager.navigator.Navigator
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -18,7 +19,7 @@ import com.yandex.mapkit.location.Location
 import com.yandex.mapkit.location.LocationListener
 import com.yandex.mapkit.location.LocationStatus
 import dagger.hilt.android.AndroidEntryPoint
-import ru.marslab.simplemap.feature.mainmap.presentation.MainMapView
+import ru.marslab.simplemap.feature.mainmap.presentation.MainMapScreen
 import ru.marslab.simplemap.ui.theme.SimpleMapTheme
 import javax.inject.Inject
 
@@ -66,7 +67,7 @@ class MainActivity : ComponentActivity() {
                 val locationPermissionState =
                     rememberPermissionState(permission = Manifest.permission.ACCESS_FINE_LOCATION)
                 if (locationPermissionState.status.isGranted) {
-                    MainMapView()
+                    Navigator(screen = MainMapScreen())
                 } else {
                     SideEffect {
                         locationPermissionState.launchPermissionRequest()

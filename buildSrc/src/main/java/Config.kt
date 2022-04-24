@@ -5,8 +5,8 @@ object AppConfig {
     const val minSdk = 26
     const val completeSdk = 32
     const val targetSdk = 32
-    const val jvmTarget = "1.8"
-    val javaVersion = JavaVersion.VERSION_1_8
+    const val jvmTarget = "11"
+    val javaVersion = JavaVersion.VERSION_11
 }
 
 object Releases {

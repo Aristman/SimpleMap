@@ -10,6 +10,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.marslab.simplemap.App
+import ru.marslab.simplemap.common.AppDataStorage
+import ru.marslab.simplemap.feature.mainmap.data.MainMapDataRepository
+import ru.marslab.simplemap.feature.mainmap.domain.MainMapRepository
 import javax.inject.Singleton
 
 @Module
@@ -20,6 +23,11 @@ class MainMapModule {
 
     @Provides
     @Singleton
-    fun getDataStorePreferences(@ApplicationContext context: Context): DataStore<Preferences> =
+    fun provideDataStorePreferences(@ApplicationContext context: Context): DataStore<Preferences> =
         context.dataStore
+
+    @Provides
+    @Singleton
+    fun provideMainMapRepository(appDataStorage: AppDataStorage): MainMapRepository =
+        MainMapDataRepository(appDataStorage)
 }
