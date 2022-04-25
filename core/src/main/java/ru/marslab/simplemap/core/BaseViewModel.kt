@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -43,8 +42,7 @@ abstract class BaseViewModel<ST, AC : Action, EV : Event>(initState: ST) : ViewM
 
     init {
         this.action
-            .scan(initState, ::reduceState)
-            .onEach { _state.emit(it) }
+            .onEach { _state.tryEmit(reduceStateByAction(state.value, it)) }
             .stateIn(viewModelScope, SharingStarted.Eagerly, initState)
     }
 
@@ -82,5 +80,5 @@ abstract class BaseViewModel<ST, AC : Action, EV : Event>(initState: ST) : ViewM
         _state.tryEmit(reduceBlock())
     }
 
-    protected abstract fun reduceState(currentState: ST, action: AC): ST
+    protected abstract fun reduceStateByAction(currentState: ST, action: AC): ST
 }

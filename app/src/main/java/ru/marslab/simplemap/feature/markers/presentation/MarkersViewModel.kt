@@ -37,13 +37,16 @@ class MarkersViewModel @Inject constructor(
         }
     }
 
-    override fun reduceState(currentState: MarkersState, action: MarkersAction): MarkersState =
+    override fun reduceStateByAction(
+        currentState: MarkersState,
+        action: MarkersAction
+    ): MarkersState =
         when (action) {
-            is MarkersAction.MarkerOnClick -> state.value.copy(
+            is MarkersAction.MarkerOnClick -> currentState.copy(
                 isShowEditMarker = true,
                 editMarker = action.marker
             )
 
-            MarkersAction.CloseEditMarker -> state.value.copy(isShowEditMarker = false)
+            MarkersAction.CloseEditMarker -> currentState.copy(isShowEditMarker = false)
         }
 }

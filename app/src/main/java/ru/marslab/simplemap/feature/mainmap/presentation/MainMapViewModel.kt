@@ -34,13 +34,16 @@ class MainMapViewModel @Inject constructor(
         }
     }
 
-    override fun reduceState(currentState: MainMapState, action: MainMapAction): MainMapState =
+    override fun reduceStateByAction(
+        currentState: MainMapState,
+        action: MainMapAction
+    ): MainMapState =
         when (action) {
-            is MainMapAction.MapLongClick -> state.value.copy(
+            is MainMapAction.MapLongClick -> currentState.copy(
                 isShowAddMarkerConfirmDialog = true,
                 newMarkerPoint = action.clickPoint
             )
-            MainMapAction.CloseAddMarkerConfirmDialog -> state.value.copy(
+            MainMapAction.CloseAddMarkerConfirmDialog -> currentState.copy(
                 isShowAddMarkerConfirmDialog = false
             )
             MainMapAction.OpenMarkersList -> {
