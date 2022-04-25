@@ -3,12 +3,15 @@ package ru.marslab.simplemap.feature.mainmap.presentation
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -31,6 +34,10 @@ class MainMapScreen : AndroidScreen() {
 @Composable
 private fun MainMapView(viewModel: MainMapViewModel) {
     val state = viewModel.state.collectAsState()
+    val yandexMap = state.value.mapWidgetModel.state.collectAsState().value.map
+    LaunchedEffect(key1 = true, key2 = yandexMap) {
+        viewModel.updateMap()
+    }
     if (state.value.isShowAddMarkerConfirmDialog) {
         ConfirmDialog(message = R.string.add_marker_dialog) {
             viewModel.sendAction(MainMapAction.CloseAddMarkerConfirmDialog)
@@ -47,7 +54,9 @@ private fun MainMapView(viewModel: MainMapViewModel) {
             }
         )
         FloatingActionButton(
-            modifier = Modifier.align(Alignment.BottomEnd),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(36.dp),
             onClick = { viewModel.sendAction(MainMapAction.OpenMarkersList) }
         ) {
             Image(

@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import ru.marslab.simplemap.core.BaseViewModel
 import ru.marslab.simplemap.feature.markers.domain.interactor.GetMapMarkersInteractor
+import ru.marslab.simplemap.feature.markers.domain.interactor.UpdateMapMarkerInteractor
 import ru.marslab.simplemap.feature.markers.presentation.model.MarkersAction
 import ru.marslab.simplemap.feature.markers.presentation.model.MarkersEvent
 import ru.marslab.simplemap.feature.markers.presentation.model.MarkersState
@@ -12,13 +13,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MarkersViewModel @Inject constructor(
-    private val getMapMarkers: GetMapMarkersInteractor
+    private val getMapMarkers: GetMapMarkersInteractor,
+    private val updateMapMarker: UpdateMapMarkerInteractor
 ) : BaseViewModel<MarkersState, MarkersAction, MarkersEvent>(MarkersState()) {
     init {
         launch {
             getMapMarkers()
                 .catch { handleError(it) }
-                .collectLatest {
+                .collect {
                     reduceState {
                         state.value.copy(markers = it)
                     }
@@ -26,10 +28,22 @@ class MarkersViewModel @Inject constructor(
         }
     }
 
+    fun updateEditedMarker(name: String, annotation: String) {
+        launch {
+            updateMapMarker(state.value.editMarker, name, annotation)
+                .catch { handleError(it) }
+                .collectLatest {
+                }
+        }
+    }
+
     override fun reduceState(currentState: MarkersState, action: MarkersAction): MarkersState =
         when (action) {
-            is MarkersAction.MarkerOnClick -> {
-                currentState
-            }
+            is MarkersAction.MarkerOnClick -> state.value.copy(
+                isShowEditMarker = true,
+                editMarker = action.marker
+            )
+
+            MarkersAction.CloseEditMarker -> state.value.copy(isShowEditMarker = false)
         }
 }

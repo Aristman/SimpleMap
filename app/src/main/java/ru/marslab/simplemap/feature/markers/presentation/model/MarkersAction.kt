@@ -5,4 +5,5 @@ import ru.marslab.simplemap.core.Action
 
 sealed class MarkersAction : Action {
     data class MarkerOnClick(val marker: MapMarker) : MarkersAction()
+    object CloseEditMarker : MarkersAction()
 }

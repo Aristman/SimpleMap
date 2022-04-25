@@ -27,6 +27,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import ru.marslab.simplemap.common.model.MapMarker
 import ru.marslab.simplemap.feature.markers.presentation.model.MarkersAction
+import ru.marslab.simplemap.feature.markers.presentation.widget.EditMarkerDialog
 
 class MarkersScreen : AndroidScreen() {
 
@@ -41,6 +42,14 @@ class MarkersScreen : AndroidScreen() {
 @Composable
 private fun MarkersView(viewModel: MarkersViewModel) {
     val state = viewModel.state.collectAsState()
+    if (state.value.isShowEditMarker) {
+        EditMarkerDialog(mapMarker = state.value.editMarker) { result, newMarker ->
+            viewModel.sendAction(MarkersAction.CloseEditMarker)
+            if (result) {
+                viewModel.updateEditedMarker(newMarker.name, newMarker.annotation)
+            }
+        }
+    }
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn {
             items(items = state.value.markers) {

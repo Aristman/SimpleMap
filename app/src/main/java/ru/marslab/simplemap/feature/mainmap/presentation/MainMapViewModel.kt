@@ -13,13 +13,15 @@ import ru.marslab.simplemap.feature.mainmap.presentation.model.MainMapAction
 import ru.marslab.simplemap.feature.mainmap.presentation.model.MainMapEvent
 import ru.marslab.simplemap.feature.mainmap.presentation.model.MainMapState
 import ru.marslab.simplemap.feature.mainmap.presentation.model.toPoint
+import ru.marslab.simplemap.feature.markers.domain.interactor.GetMapMarkersInteractor
 import ru.marslab.simplemap.feature.markers.presentation.MarkersScreen
 import javax.inject.Inject
 
 @HiltViewModel
 class MainMapViewModel @Inject constructor(
     private val dataStore: DataStore<Preferences>,
-    private val addNewMapMarker: AddNewMapMarkerInteractor
+    private val addNewMapMarker: AddNewMapMarkerInteractor,
+    private val getMapMarkers: GetMapMarkersInteractor
 ) : BaseViewModel<MainMapState, MainMapAction, MainMapEvent>(MainMapState()) {
 
     init {
@@ -47,6 +49,30 @@ class MainMapViewModel @Inject constructor(
             }
         }
 
+    fun updateMap() {
+        launch {
+            getMapMarkers()
+                .catch { handleError(it) }
+                .collectLatest { markers ->
+                    val yandexMap = state.value.mapWidgetModel.state.value.map
+                    val position = state.value.mapWidgetModel.state.value.position
+                    reduceState {
+                        state.value.copy(
+                            mapMarkers = markers.mapNotNull {
+                                yandexMap?.mapObjects?.addPlacemark(
+                                    it.location
+                                )
+                            }
+                        )
+                    }
+                    state.value.mapWidgetModel.setLocation(
+                        location = position.target,
+                        zoom = position.zoom
+                    )
+                }
+        }
+    }
+
     fun addNewMarker() {
         val newMarkerPoint = state.value.newMarkerPoint
         val mapMarkers = state.value.mapMarkers.toMutableList()
@@ -54,7 +80,7 @@ class MainMapViewModel @Inject constructor(
         launch {
             addNewMapMarker(MapMarker("", "", newMarkerPoint))
                 .catch { handleError(it) }
-                .collectLatest {
+                .collect {
                     yandexMap?.let { map ->
                         reduceState {
                             state.value.copy(
