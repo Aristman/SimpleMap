@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">SimpleMap</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Отмена</string>
+    <string name="add_marker_dialog">Добавить новый маркер?</string>
+    <string name="name">Имя</string>
+    <string name="annotation">Описание</string>
+    <string name="edit_marker_text">Введите новое имя метки и ее описание</string>
 </resources>

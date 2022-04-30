@@ -1,3 +1,8 @@
+@file:Suppress("UnstableApiUsage")
+
+
+include(":core")
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -13,4 +18,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "SimpleMap"
-include ':app'
+include(":app")
