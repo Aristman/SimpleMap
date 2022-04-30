@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cafe.adriel.voyager.navigator.Navigator
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,15 +23,14 @@ interface Action
 
 private const val ERROR_LOG_TAG = "ViewModel Error"
 
-@OptIn(ExperimentalCoroutinesApi::class)
 abstract class BaseViewModel<ST, AC : Action, EV : Event>(initState: ST) : ViewModel() {
     private val _state = MutableStateFlow(initState)
     val state: StateFlow<ST>
         get() = _state.asStateFlow()
 
-    private val action = MutableSharedFlow<AC>(extraBufferCapacity = 1)
+    private val action = MutableSharedFlow<AC>()
 
-    private val _event = Channel<EV?>()
+    private val _event = Channel<EV?>(capacity = Channel.CONFLATED)
     val event: Flow<EV?>
         get() = _event.receiveAsFlow()
 
@@ -50,18 +48,20 @@ abstract class BaseViewModel<ST, AC : Action, EV : Event>(initState: ST) : ViewM
         this._navigator = navigator
     }
 
-    fun launch(block: suspend CoroutineScope.() -> Unit) {
+    fun sendAction(action: AC) {
+        launch {
+            this@BaseViewModel.action.emit(action)
+        }
+    }
+
+    protected fun launch(block: suspend CoroutineScope.() -> Unit) {
         viewModelScope.launch {
             block.invoke(this)
         }
     }
 
-    open fun handleError(error: Throwable, message: String? = null) {
+    protected open fun handleError(error: Throwable, message: String? = null) {
         Log.d(ERROR_LOG_TAG, message ?: error.message.orEmpty(), error)
-    }
-
-    fun sendAction(action: AC) {
-        this.action.tryEmit(action)
     }
 
     protected fun sendEvent(event: EV) {
@@ -70,7 +70,7 @@ abstract class BaseViewModel<ST, AC : Action, EV : Event>(initState: ST) : ViewM
         }
     }
 
-    fun clearEvent() {
+    protected fun clearEvent() {
         launch {
             _event.send(null)
         }
